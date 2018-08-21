@@ -17,6 +17,7 @@ import com.spring.shop.filter.JWTLoginFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	   protected void configure(HttpSecurity http) throws Exception {
+//		http.httpBasic().disable();
 	       http.csrf().disable().authorizeRequests()
 	               .antMatchers("/").permitAll() // Có nghĩa là request "/" ko cần phải đc xác thực
 	               .antMatchers(HttpMethod.POST, "/login").permitAll() // Request dạng POST tới "/login" luôn được phép truy cập dù là đã authenticated hay chưa
