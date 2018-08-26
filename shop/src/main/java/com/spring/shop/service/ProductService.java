@@ -1,6 +1,7 @@
 package com.spring.shop.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,8 @@ public class ProductService {
 		productRepository.save(product);
 		model.addAttribute("listProduct", productRepository.findAll());
 		return "";
+	}
+	public Product getProduct(long productId) {
+		return productRepository.getProduct(productId);
 	}
 }

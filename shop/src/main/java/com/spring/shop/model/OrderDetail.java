@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -11,25 +13,36 @@ import javax.persistence.Table;
 public class OrderDetail implements Serializable{
 	@Id
 //	@Column(name="orderId")
-	private long orderId;
+	@ManyToOne
+	@JoinColumn(name="order_id")
+	private Order order;
 	@Id
 //	@Column(name="producId")
-	private long producId;
+	@ManyToOne
+	@JoinColumn(name="product_id")
+	private Product produc;
 //	@Column(name="quantity")
 	private long quantity;
 //	@Column(name="total")
 	private double total;
-	public long getOrderId() {
-		return orderId;
+	
+	public OrderDetail() {
+		// TODO Auto-generated constructor stub
 	}
-	public void setOrderId(long orderId) {
-		this.orderId = orderId;
+	
+	public OrderDetail(Order order, Product produc, long quantity, double total) {
+		super();
+		this.order = order;
+		this.produc = produc;
+		this.quantity = quantity;
+		this.total = total;
 	}
-	public long getProducId() {
-		return producId;
+
+	public Product getProduc() {
+		return produc;
 	}
-	public void setProducId(long producId) {
-		this.producId = producId;
+	public void setProduc(Product produc) {
+		this.produc = produc;
 	}
 	public long getQuantity() {
 		return quantity;
