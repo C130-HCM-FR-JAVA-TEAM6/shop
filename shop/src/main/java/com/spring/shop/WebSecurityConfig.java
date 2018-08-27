@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	  http.csrf().disable();
 	  http.authorizeRequests()
 	      .antMatchers("/addAccount","/deleteAccount","/getAccount").access("hasRole('ROLE_ADMIN')")
-	      .antMatchers("/addProductToCart/**","/addOrder","/deleteOrder").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+	      .antMatchers("/addProductToCart","/deleteProductToCart","/subtracProductToCart","/addOrder","/deleteOrder").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
 	      .anyRequest().permitAll()
 	      .and()
 	      .httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()

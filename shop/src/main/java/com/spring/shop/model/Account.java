@@ -17,28 +17,25 @@ import javax.persistence.Table;
 public class Account implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @Column(name="accountId",columnDefinition="accountId")
-	// @Column(name="account_id")
 	private long accountId;
-	// @Column(name="userName",columnDefinition="userName")
-	// @Column(name="user_name")
+
 	private String userName;
-	// @Column(name="password",columnDefinition="password")
+
 	@Column(name = "password")
 	private String password;
-	// @Column(name="birthday",columnDefinition="birthday")
+
 	private Date birthday;
-	// @Column(name="gender",columnDefinition="gender")
+
 	private boolean gender;
-	// @Column(name="name",columnDefinition="name")
+
 	private String name;
-	// @Column(name="email",columnDefinition="email")
+
 	private String email;
-	// @Column(name="address",columnDefinition="address")
+
 	private String address;
-	// @Column(name="phone",columnDefinition="phone")
+	
 	private String phone;
-	// @Column(name="roleId",columnDefinition="roleId")
+
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
@@ -132,6 +129,12 @@ public class Account implements Serializable {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	@Override
+	public String toString() {
+		return accountId+" - "+name+" - "+userName+" - "+password;
+	}
+	
 
 
 

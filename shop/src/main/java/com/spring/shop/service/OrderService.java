@@ -1,6 +1,7 @@
 package com.spring.shop.service;
 
 import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,6 @@ import com.spring.shop.repository.OrderRepository;
 
 @Service
 @Transactional
-@SessionScope
 public class OrderService {
 	@Autowired
 	private OrderRepository orderRepository;
@@ -34,14 +34,15 @@ public class OrderService {
 		Date sqldate = new Date(date.getYear(), date.getMonth(), date.getDay());
 		List<OrderDetail> listOrderDetail = new ArrayList<>();
 		Order order = new Order(account,sqldate,listOrderDetail);
-		System.out.println(order);
  		return order;
 	}
 	public Order findById(long orderId) {
 		return orderRepository.findById(orderId).get();
 	}
-//	public boolean addProductToCart(Order order,long productId) {
-//		
-//	}
-	
+	public Order saveOrder(Order order) {
+		return orderRepository.save(order);
+	}
+	public List<Order> findAllOrder(){
+		return orderRepository.findAll();
+	}
 }

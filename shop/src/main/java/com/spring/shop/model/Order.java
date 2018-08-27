@@ -1,5 +1,6 @@
 package com.spring.shop.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
@@ -13,16 +14,18 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="order")
-public class Order {
+@Table(name="[order]")
+public class Order implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long orderId;
+	
 	@ManyToOne
 	@JoinColumn(name="account_id")
 	private Account account;
 	
 	private Date orderDate;
+	
 	@OneToMany(mappedBy="order")
 	private List<OrderDetail> orderDetail;
 	
@@ -31,6 +34,21 @@ public class Order {
 	}
 	
 	
+	
+	public Order(Account account) {
+		super();
+		this.account = account;
+	}
+
+
+
+	public Order(Account account, Date orderDate) {
+		super();
+		this.account = account;
+		this.orderDate = orderDate;
+	}
+
+
 
 	public Order(Account account, Date orderDate, List<OrderDetail> orderDetail) {
 		super();
@@ -66,5 +84,7 @@ public class Order {
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
+
+	
 	
 }

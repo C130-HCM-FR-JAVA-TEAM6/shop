@@ -13,6 +13,7 @@ import javax.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.StreamingHttpOutputMessage.Body;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ import com.spring.shop.model.Order;
 import com.spring.shop.model.OrderDetail;
 import com.spring.shop.model.Product;
 import com.spring.shop.service.AccountService;
+import com.spring.shop.service.OrderDetailService;
 import com.spring.shop.service.OrderService;
 import com.spring.shop.service.ProductService;
 
@@ -40,23 +42,27 @@ public class OrderController {
 	@Autowired
 	private AccountService accountService;
 	
-	@RequestMapping("/addOrder/{productId}/accountId")
-	public Order addOrder(HttpServletRequest request, HttpServletResponse response,@PathVariable("productId") long productId, @PathVariable("accountId") long accountId){
+	@Autowired
+	private OrderDetailService orderDetailService;
+	@RequestMapping("/addOrder")
+	public ResponseEntity<?> addOrder(HttpServletRequest request, HttpServletResponse response){
 		HttpSession session = request.getSession();
+		long accountId = Long.valueOf(request.getParameter("accountId"));
+		
 		if(session.getAttribute(String.valueOf(accountId)) == null) {
-			Order order = orderService.createOrder(2);
-			session.setAttribute("member1",order);
-			System.out.println("session null and create new session");
-			return order;
+			Order order = orderService.createOrder(accountId);
+			return new ResponseEntity<Order>(order,HttpStatus.INTERNAL_SERVER_ERROR);
 		}else {
 			Order order = (Order) session.getAttribute(String.valueOf(accountId));
-			List<OrderDetail> listOrder = order.getOrderDetail();
-			Product product = productService.getProduct(productId);
-			listOrder.add(new OrderDetail(orderService.findById(order.getOrderId()),product,1,product.getPrice()));
-			order.setOrderDetail(listOrder);
-			session.setAttribute("member1", order);
-			System.out.println("session exsits");
-			return order;
+			List<OrderDetail> list = order.getOrderDetail();
+			order = orderService.saveOrder(new Order(order.getAccount(), order.getOrderDate()));
+			
+			System.out.println(list.size());
+			for(int i=0;i<list.size();i++) {
+				list.get(i).setOrder(order);
+			}
+			orderDetailService.saveOrderDetail(list);
+			return new ResponseEntity<Order>(order,HttpStatus.OK);
 		}
 		
 	}
@@ -77,27 +83,92 @@ public class OrderController {
 			Order order = (Order) session.getAttribute(String.valueOf(accountId));
 			List<OrderDetail> listOrder = order.getOrderDetail();
 			Product product = productService.getProduct(productId);
-			listOrder.add(new OrderDetail(order,product,1,product.getPrice()));
+			
+			OrderDetail orderDetail;
+			boolean content = false;
+			for(int i=0;i<listOrder.size();i++) {
+				if(listOrder.get(i).getProduct().getProductId() == productId) {
+					orderDetail = listOrder.get(i);
+					orderDetail.setQuantity(orderDetail.getQuantity() + 1);
+					listOrder.set(i, orderDetail);
+					content = true;
+				}
+			}
+			if(!content) {
+				orderDetail = new OrderDetail(order,product,1,product.getPrice());
+				listOrder.add(orderDetail);
+			}
+			
 			order.setOrderDetail(listOrder);
 			session.setAttribute(String.valueOf(accountId), order);
 			return order;
 		}
 	}
 	
-//	@RequestMapping("/subtracProduct/{productId}")
-//	public void subtracProduct(@PathVariable("productId") long productId) {
-//		orderService.subtracProduct(productId);
-//	}
-//	
-//	@RequestMapping("/order")
-//	public List<Product> getOrder(){
-//		Map<Long, Integer> order = orderService.getCart();
-//		List<Product> listOrder = new ArrayList<>();
-//		for(Map.Entry<Long, Integer> item : order.entrySet()) {
-//			System.out.println(item.getKey());
-//			listOrder.add(productService.getProduct(item.getValue()));
-//		}
-//		System.out.println(order.toString());
-//		return listOrder;
-//	}
+	@RequestMapping("/subtracProductToCart")
+	public ResponseEntity<?> subtracProduct(HttpServletRequest request, HttpServletResponse response) {
+		HttpSession session = request.getSession();
+		long accountId = Long.valueOf(request.getParameter("accountId"));
+		long productId = Long.valueOf(request.getParameter("productId"));
+		if(session.getAttribute(String.valueOf(accountId)) == null) {
+			Order order = orderService.createOrder(accountId);
+			return new ResponseEntity<Order>(order,HttpStatus.INTERNAL_SERVER_ERROR);
+		}else {
+			Order order = (Order) session.getAttribute(String.valueOf(accountId));
+			List<OrderDetail> listOrder = order.getOrderDetail();
+			Product product = productService.getProduct(productId);
+			
+			OrderDetail orderDetail;
+			boolean content = false;
+			for(int i=0;i<listOrder.size();i++) {
+				if(listOrder.get(i).getProduct().getProductId() == productId) {
+					orderDetail = listOrder.get(i);
+					if(orderDetail.getQuantity() > 1) {
+						orderDetail.setQuantity(orderDetail.getQuantity() - 1);
+						listOrder.set(i, orderDetail);
+					}
+					else {
+						listOrder.remove(i);
+					}
+					content = true;
+				}
+			}
+			if(!content) {
+				orderDetail = new OrderDetail(order,product,1,product.getPrice());
+				listOrder.add(orderDetail);
+			}
+			
+			order.setOrderDetail(listOrder);
+			session.setAttribute(String.valueOf(accountId), order);
+			return new ResponseEntity<Order>(order,HttpStatus.OK);
+		}
+	}
+	
+	@RequestMapping("/deleteProductToCart")
+	public ResponseEntity<?> deleteProduct(HttpServletRequest request, HttpServletResponse response){
+		HttpSession session = request.getSession();
+		long accountId = Long.valueOf(request.getParameter("accountId"));
+		long productId = Long.valueOf(request.getParameter("productId"));
+		if(session.getAttribute(String.valueOf(accountId)) == null) {
+			Order order = orderService.createOrder(accountId);
+			return new ResponseEntity<Order>(order,HttpStatus.INTERNAL_SERVER_ERROR);
+		}else {
+			Order order = (Order) session.getAttribute(String.valueOf(accountId));
+			List<OrderDetail> listOrder = order.getOrderDetail();	
+
+			for(int i=0;i<listOrder.size();i++) {
+				if(listOrder.get(i).getProduct().getProductId() == productId) {
+					listOrder.remove(i);
+				}
+			}
+			
+			order.setOrderDetail(listOrder);
+			session.setAttribute(String.valueOf(accountId), order);
+			return new ResponseEntity<Order>(order,HttpStatus.OK);
+		}
+	}
+	@RequestMapping("/getOrder")
+	public List<Order> getOrder(){
+		return orderService.findAllOrder();
+	}
 }
