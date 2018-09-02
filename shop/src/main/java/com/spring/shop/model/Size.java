@@ -18,6 +18,16 @@ public class Size {
 	@JoinColumn(name="product_id")
 	private Product product;
 	private String size;
+	public Size() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Size(Product product, String size) {
+		super();
+		this.product = product;
+		this.size = size;
+	}
+
 	public long getSizeId() {
 		return sizeId;
 	}

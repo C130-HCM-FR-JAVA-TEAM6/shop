@@ -11,16 +11,21 @@ import com.spring.shop.repository.OrderDetailRepositoty;
 @Service
 public class OrderDetailService {
 	@Autowired
-	private OrderDetailRepositoty orderDetailSercive;
+	private OrderDetailRepositoty orderDetailRepository;
+	@Autowired
+	private ProductService productSevice;
+	@Autowired
+	private OrderService orderService;
 	public boolean saveOrderDetail(List<OrderDetail> list) {
-		try {
-			for(OrderDetail o:list) {
-				orderDetailSercive.save(o);
-			}
-			return true;
-		} catch (Exception e) {
-			return false;
+		for(OrderDetail o:list) {
+			orderDetailRepository.save(o);
 		}
-		
+		return true;
 	}
+	public List<OrderDetail> findAll(){
+		return orderDetailRepository.findAll();
+	}
+//	public OrderDetail saveOrderDetail() {
+//		return orderDetailRepository.save(new OrderDetail(orderService.findById(3).getOrderId(), productSevice.getProduct(3).getProductId(), 1, 500000));
+//	}
 }

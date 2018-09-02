@@ -20,6 +20,14 @@ public class ProductImage {
 	@JoinColumn(name="product_id")
 	private Product product;
 	
+	public ProductImage() {
+		// TODO Auto-generated constructor stub
+	}
+	public ProductImage(String productImage, Product product) {
+		super();
+		this.productImage = productImage;
+		this.product = product;
+	}
 	public long getImageId() {
 		return imageId;
 	}

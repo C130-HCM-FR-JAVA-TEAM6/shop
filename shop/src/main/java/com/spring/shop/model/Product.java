@@ -35,7 +35,7 @@ public class Product implements Serializable{
 	private List<Size> productSize;
 	
 	@OneToMany(mappedBy="product")
-	private List<Size> productColor;
+	private List<Color> productColor;
 	
 	public long getProductId() {
 		return productId;
@@ -79,12 +79,15 @@ public class Product implements Serializable{
 	public void setProductSize(List<Size> productSize) {
 		this.productSize = productSize;
 	}
-	public List<Size> getProductColor() {
+	public List<Color> getProductColor() {
 		return productColor;
 	}
-	public void setProductColor(List<Size> productColor) {
+	public void setProductColor(List<Color> productColor) {
 		this.productColor = productColor;
 	}
+	
+	
+	
 	
 	
 	

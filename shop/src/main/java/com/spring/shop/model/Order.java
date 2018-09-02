@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="[order]")
 public class Order implements Serializable{
@@ -85,6 +87,12 @@ public class Order implements Serializable{
 		this.orderDate = orderDate;
 	}
 
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return orderId+" - "+account.getAccountId()+" - "+orderDate+" - "+orderDetail;
+	}
+	
 	
 	
 }

@@ -2,12 +2,12 @@ package com.spring.shop;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.spring.shop.filter.CustomAccessDeniedHandler;
@@ -36,12 +36,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected AuthenticationManager authenticationManager() throws Exception {
     return super.authenticationManager();
   }
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+      BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+      return bCryptPasswordEncoder;
+  }
   protected void configure(HttpSecurity http) throws Exception {
     // Disable crsf cho đường dẫn /rest/**
-	  http.csrf().disable();
+	  http.cors().and().csrf().disable();
 	  http.authorizeRequests()
 	      .antMatchers("/addAccount","/deleteAccount","/getAccount").access("hasRole('ROLE_ADMIN')")
-	      .antMatchers("/addProductToCart","/deleteProductToCart","/subtracProductToCart","/addOrder","/deleteOrder").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+	      .antMatchers("/addOrder","/deleteOrder").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
 	      .anyRequest().permitAll()
 	      .and()
 	      .httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()

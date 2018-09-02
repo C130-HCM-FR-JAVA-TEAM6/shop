@@ -18,6 +18,16 @@ public class Color {
 	@JoinColumn(name="product_id")
 	private Product product;
 	private String color;
+	public Color() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public Color(Product product, String color) {
+		super();
+		this.product = product;
+		this.color = color;
+	}
+
 	public long getColorId() {
 		return colorId;
 	}

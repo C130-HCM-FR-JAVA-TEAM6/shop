@@ -43,11 +43,25 @@ public class Account implements Serializable {
 	public Account() {
 		// TODO Auto-generated constructor stub
 	}
-
+	
 	public Account(String userName, String password) {
 		super();
 		this.userName = userName;
 		this.password = password;
+	}
+	
+	public Account(String userName, String password, Date birthday, boolean gender, String name, String email,
+			String address, String phone, Role role) {
+		super();
+		this.userName = userName;
+		this.password = password;
+		this.birthday = birthday;
+		this.gender = gender;
+		this.name = name;
+		this.email = email;
+		this.address = address;
+		this.phone = phone;
+		this.role = role;
 	}
 
 	public Long getAccountId() {
