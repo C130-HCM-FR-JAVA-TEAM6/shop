@@ -13,6 +13,7 @@ import com.spring.shop.model.Product;
 import com.spring.shop.repository.ColorRepository;
 import com.spring.shop.repository.ImageRepository;
 import com.spring.shop.repository.ProductRepository;
+import com.spring.shop.repository.ProductTypeRepository;
 import com.spring.shop.repository.SizeRepository;
 
 @Service
@@ -25,6 +26,8 @@ public class ProductService {
 	private SizeRepository sizeRepository;
 	@Autowired
 	private ImageRepository imageRepository;
+	@Autowired
+	private ProductTypeRepository productTypeRepository;
 
 	public List<Product> getAllProduct() {
 		return productRepository.findAll();
@@ -66,5 +69,8 @@ public class ProductService {
 
 	public Product getProduct(long productId) {
 		return productRepository.getProduct(productId);
+	}
+	public List<Product> getMenshirtProduct(){
+		return productRepository.getMenshirtProduct(productTypeRepository.findById((long) 1).get(),productTypeRepository.findById((long) 3).get());
 	}
 }

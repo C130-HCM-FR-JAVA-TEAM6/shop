@@ -54,4 +54,30 @@ public class AccountService {
 		authorities.add(new SimpleGrantedAuthority(account.getRole().getRoleName()));
 		return authorities;
 	}
+	public boolean deleteAccount(long accountId) {
+		try {
+			accountRepository.deleteById(accountId);
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	public boolean checkAccountUserName(String userName) {
+		if(accountRepository.findByUserName(userName) != null) {
+			return true;
+		}
+		return false;
+	}
+	public boolean checkAccountEmail(String email) {
+		if(accountRepository.findByEmail(email) != null) {
+			return true;
+		}
+		return false;
+	}
+	public boolean checkAccountPhone(String phone) {
+		if(accountRepository.findByPhone(phone) != null) {
+			return true;
+		}
+		return false;
+	}
 }

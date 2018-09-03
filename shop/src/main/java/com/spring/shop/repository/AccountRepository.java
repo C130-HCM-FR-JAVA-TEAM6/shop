@@ -16,4 +16,10 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
 	Account findByUserNameAndPassword(@Param("user_name") String username,@Param("password") String password);
 	@Query("select a from Account a where a.userName = :user_name")
 	Account findByUserName(@Param("user_name") String username);
+	
+	@Query("select a from Account a where a.email = :email")
+	Account findByEmail(@Param("email") String email);
+	
+	@Query("select a from Account a where a.phone = :phone")
+	Account findByPhone(@Param("phone") String phone);
 }

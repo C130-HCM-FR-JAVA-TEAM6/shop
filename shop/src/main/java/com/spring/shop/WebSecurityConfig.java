@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Disable crsf cho đường dẫn /rest/**
 	  http.cors().and().csrf().disable();
 	  http.authorizeRequests()
-	      .antMatchers("/addAccount","/deleteAccount","/getAccount").access("hasRole('ROLE_ADMIN')")
+	      .antMatchers("/createAccount","/deleteAccount","/getAccount").access("hasRole('ROLE_ADMIN')")
 	      .antMatchers("/addOrder","/deleteOrder").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
 	      .anyRequest().permitAll()
 	      .and()

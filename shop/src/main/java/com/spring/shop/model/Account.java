@@ -50,6 +50,8 @@ public class Account implements Serializable {
 		this.password = password;
 	}
 	
+	
+
 	public Account(String userName, String password, Date birthday, boolean gender, String name, String email,
 			String address, String phone, Role role) {
 		super();

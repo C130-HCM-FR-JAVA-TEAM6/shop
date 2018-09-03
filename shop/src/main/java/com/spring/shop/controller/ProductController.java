@@ -83,6 +83,7 @@ public class ProductController {
 		product.setProductId(id);
 	
 		productService.saveProduct(product);
+//		System.out.println(product.getProducer().getProducerName());
 		colorRepository.deleteAllColorProduct(productUpdate.get());
 		colorService.createColorProduct(product.getProductId(), product.getProductColor());
 		
@@ -93,6 +94,11 @@ public class ProductController {
 		imageService.createProductImage(product.getProductId(), product.getProductImage());
 		return new ResponseEntity<Product>(product, HttpStatus.OK);
 	}
+	@RequestMapping("/getProductMenShirt")
+	public List<Product> getAllProductMenshirt(){
+		return productService.getMenshirtProduct();
+	}
+	
 	
 }
 
